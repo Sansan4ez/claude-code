@@ -6,10 +6,7 @@
       "TZ": "${localEnv:TZ:America/Los_Angeles}"
     }
   },
-  "runArgs": [
-    "--cap-add=NET_ADMIN",
-    "--cap-add=NET_RAW"
-  ],
+  "runArgs": ["--cap-add=NET_ADMIN", "--cap-add=NET_RAW"],
   "customizations": {
     "vscode": {
       "extensions": [
@@ -44,7 +41,14 @@
   "remoteEnv": {
     "NODE_OPTIONS": "--max-old-space-size=4096",
     "CLAUDE_CONFIG_DIR": "/home/node/.claude",
-    "POWERLEVEL9K_DISABLE_GITSTATUS": "true"
+    "POWERLEVEL9K_DISABLE_GITSTATUS": "true",
+    "PROXY_SERVER": "${localEnv:PROXY_SERVER}",
+    "HTTP_PROXY": "${localEnv:HTTP_PROXY}",
+    "HTTPS_PROXY": "${localEnv:HTTPS_PROXY}",
+    "NO_PROXY": "${localEnv:NO_PROXY:localhost,127.0.0.1,.local}",
+    "http_proxy": "${localEnv:HTTP_PROXY}",
+    "https_proxy": "${localEnv:HTTPS_PROXY}",
+    "no_proxy": "${localEnv:NO_PROXY:localhost,127.0.0.1,.local}"
   },
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=delegated",
   "workspaceFolder": "/workspace",

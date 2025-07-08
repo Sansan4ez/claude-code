@@ -56,14 +56,15 @@ for domain in \
     "api.anthropic.com" \
     "sentry.io" \
     "statsig.anthropic.com" \
-    "statsig.com"; do
+    "statsig.com" \
+    "api.myip.com"; do
     echo "Resolving $domain..."
     ips=$(dig +short A "$domain")
     if [ -z "$ips" ]; then
         echo "ERROR: Failed to resolve $domain"
         exit 1
     fi
-    
+
     while read -r ip; do
         if [[ ! "$ip" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
             echo "ERROR: Invalid IP from DNS for $domain: $ip"
@@ -73,6 +74,10 @@ for domain in \
         ipset add allowed-domains "$ip"
     done < <(echo "$ips")
 done
+
+# Add static IP addresses
+echo "Adding static IP 168.81.66.89"
+ipset add allowed-domains "168.81.66.89"
 
 # Get host IP from default route
 HOST_IP=$(ip route | grep default | cut -d" " -f3)

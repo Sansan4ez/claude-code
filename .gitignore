@@ -1,0 +1,11 @@
+# Environment variables with secrets
+.env
+.env.local
+.env.*.local
+
+# Proxy configuration files
+proxy.conf
+.proxy
+
+# VS Code settings (optional)
+.vscode/settings.json
