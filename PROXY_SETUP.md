@@ -36,10 +36,10 @@ HTTPS_PROXY=http://username:password@proxy.company.com:8080
 NO_PROXY=localhost,127.0.0.1,.local,.company.com
 ```
 
-2. Загрузите переменные перед запуском VS Code:
+2. Загрузите переменные:
 
 ```bash
-source .env && code .
+source .env
 ```
 
 ## Использование в контейнере
@@ -47,29 +47,20 @@ source .env && code .
 После настройки переменных доступны команды:
 
 ```bash
-# Проверить статус
-proxy-status
-
-# Включить прокси
-proxy-on
-
-# Отключить прокси
-proxy-off
-
-# Переключить состояние
-proxy-toggle
-
-# Тест соединения
-proxy-test
-
-# Запустить команду без прокси
-no-proxy curl https://google.com
-```
-
-## Автозагрузка алиасов
-
-Добавьте в ~/.zshrc:
-
-```bash
+# Загрузите переменные
+source .env
+# Добавить в ~/.zshrc для постоянства
 echo 'source /workspace/.devcontainer/proxy-aliases.sh' >> ~/.zshrc
+# Перезагрузить конфигурацию
+source ~/.zshrc
+
+# Доступные команды:
+proxy-config    # ✅ Показать конфигурацию
+proxy-on        # ✅ Включить proxy
+proxy-off       # ✅ Отключить proxy
+proxy-toggle    # ✅ Переключить proxy
+proxy-status    # ✅ Показать переменные
+proxy-test      # ✅ Тестировать соединение
+proxy-reload    # ✅ Перезагрузить .env
+no-proxy <cmd>  # ✅ Выполнить команду без proxy
 ```

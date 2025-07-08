@@ -27,6 +27,10 @@ iptables -A OUTPUT -o lo -j ACCEPT
 # Create ipset with CIDR support
 ipset create allowed-domains hash:net
 
+# Add proxy server IP first (before any restrictions)
+echo "Adding proxy server IP 168.81.66.89"
+ipset add allowed-domains "168.81.66.89"
+
 # Fetch GitHub meta information and aggregate + add their IP ranges
 echo "Fetching GitHub IP ranges..."
 gh_ranges=$(curl -s https://api.github.com/meta)
@@ -75,10 +79,6 @@ for domain in \
     done < <(echo "$ips")
 done
 
-# Add static IP addresses
-echo "Adding static IP 168.81.66.89"
-ipset add allowed-domains "168.81.66.89"
-
 # Get host IP from default route
 HOST_IP=$(ip route | grep default | cut -d" " -f3)
 if [ -z "$HOST_IP" ]; then
@@ -92,6 +92,13 @@ echo "Host network detected as: $HOST_NETWORK"
 # Set up remaining iptables rules
 iptables -A INPUT -s "$HOST_NETWORK" -j ACCEPT
 iptables -A OUTPUT -d "$HOST_NETWORK" -j ACCEPT
+
+# Allow proxy server traffic (HTTP/HTTPS proxy ports)
+iptables -A OUTPUT -d 168.81.66.89 -p tcp --dport 8080 -j ACCEPT
+iptables -A OUTPUT -d 168.81.66.89 -p tcp --dport 3128 -j ACCEPT
+iptables -A OUTPUT -d 168.81.66.89 -p tcp --dport 80 -j ACCEPT
+iptables -A OUTPUT -d 168.81.66.89 -p tcp --dport 443 -j ACCEPT
+iptables -A INPUT -s 168.81.66.89 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 # Set default policies to DROP first
 iptables -P INPUT DROP
@@ -120,4 +127,12 @@ if ! curl --connect-timeout 5 https://api.github.com/zen >/dev/null 2>&1; then
     exit 1
 else
     echo "Firewall verification passed - able to reach https://api.github.com as expected"
+fi
+
+# Verify proxy server access
+echo "Testing proxy server connectivity..."
+if curl --connect-timeout 5 -I http://168.81.66.89:8080 >/dev/null 2>&1; then
+    echo "Firewall verification passed - able to reach proxy server"
+else
+    echo "WARNING: Cannot reach proxy server directly (this might be normal)"
 fi

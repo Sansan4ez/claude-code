@@ -9,3 +9,4 @@ proxy.conf
 
 # VS Code settings (optional)
 .vscode/settings.json
+.specstory/history
