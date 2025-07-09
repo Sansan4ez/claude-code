@@ -12,6 +12,10 @@ globs: *
 ## CODING STANDARDS
 
 ## WORKFLOW & RELEASE RULES
+- When encountering divergent branches during a `git pull`, the recommended approach for most situations is to use merge: `git config pull.rebase false` followed by `git pull`. This creates a merge commit and preserves the full history of changes.
+- For a cleaner, linear history, consider rebasing with `git config pull.rebase true` followed by `git pull`. Be aware that this might require resolving conflicts.
+- Use fast-forward only (`git config pull.ff only` followed by `git pull`) only if your local branch has no unique commits.
+- To resolve divergent branches on a single pull operation without changing the global config use: `git pull --no-rebase` (merge) or `git pull --rebase` (rebase).
 
 ## DEBUGGING
 - When troubleshooting network issues in the devcontainer, start by checking the `init-firewall.sh` script to ensure the necessary domains or IP addresses are whitelisted. Use `dig +short A <domain>` to resolve the IP address of a domain, and then check if that IP is present in the `allowed-domains` ipset.

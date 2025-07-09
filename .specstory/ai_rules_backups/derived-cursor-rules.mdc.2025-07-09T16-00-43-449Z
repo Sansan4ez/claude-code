@@ -1,0 +1,14 @@
+
+## HEADERS
+
+## TECH STACK
+
+## PROJECT DOCUMENTATION & CONTEXT SYSTEM
+
+## CODING STANDARDS
+
+## WORKFLOW & RELEASE RULES
+
+## DEBUGGING
+- When troubleshooting network issues in the devcontainer, start by checking the `init-firewall.sh` script to ensure the necessary domains or IP addresses are whitelisted. Use `dig +short A <domain>` to resolve the IP address of a domain, and then check if that IP is present in the `allowed-domains` ipset.
+- If the `init-firewall.sh` script is hanging on "Fetching GitHub IP ranges...", it indicates a problem with accessing the GitHub API. This can be due to the firewall blocking access or a network issue. Temporarily bypass or disable the GitHub IP fetching to allow the script to complete.
